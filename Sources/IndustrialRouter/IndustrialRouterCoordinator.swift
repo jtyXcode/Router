@@ -4,6 +4,28 @@ import QuartzCore
 
 // MARK: - Coordinator
 
+private struct RouteRequestSignature: Equatable {
+    let routeKey: String
+    let paramsFingerprint: String
+    let navigationKey: String
+}
+
+private struct RouteRequestStamp {
+    let signature: RouteRequestSignature
+    let time: CFTimeInterval
+}
+
+private extension RouterNavigationType {
+    var reentryKey: String {
+        switch self {
+        case .push(let popCurrent, _):
+            return "push:\(popCurrent)"
+        case .modal(let style, let wrapInNavigation, _, _):
+            return "modal:\(style.rawValue):\(wrapInNavigation)"
+        }
+    }
+}
+
 public final class IndustrialRouterCoordinator: NSObject {
     public static let shared = IndustrialRouterCoordinator()
 
@@ -15,7 +37,7 @@ public final class IndustrialRouterCoordinator: NSObject {
     private var cancellables = Set<AnyCancellable>()
     private var interceptionCancellables: [UUID: AnyCancellable] = [:]
     private var rootGeneration = 0
-    private var lastAcceptedRouteTime: CFTimeInterval = 0
+    private var lastAcceptedRoute: RouteRequestStamp?
     private let routeReentryInterval: CFTimeInterval = 1
 
     private var completionSubjects: [ObjectIdentifier: PassthroughSubject<Any?, Never>] = [:]
@@ -34,6 +56,10 @@ public final class IndustrialRouterCoordinator: NSObject {
         let responseSubject: PassthroughSubject<Any?, Never>
         let redirectDepth: Int
         let rootGeneration: Int
+        let normalizedRouteKey: String
+        let paramsFingerprint: String
+        let routeFingerprint: String
+        let reentrySignature: RouteRequestSignature
 
         init(
             id: UUID = UUID(),
@@ -53,6 +79,14 @@ public final class IndustrialRouterCoordinator: NSObject {
             self.responseSubject = responseSubject
             self.redirectDepth = redirectDepth
             self.rootGeneration = rootGeneration
+            self.normalizedRouteKey = Self.normalizeRouteKey(path.stringValue)
+            self.paramsFingerprint = Self.makeParamsFingerprint(params)
+            self.routeFingerprint = "\(normalizedRouteKey)|\(paramsFingerprint)"
+            self.reentrySignature = RouteRequestSignature(
+                routeKey: normalizedRouteKey,
+                paramsFingerprint: paramsFingerprint,
+                navigationKey: type.reentryKey
+            )
         }
 
         func redirected(to path: any RoutePath, type: RouterNavigationType, params: [String: Any]?) -> RouteRequest {
@@ -65,6 +99,39 @@ public final class IndustrialRouterCoordinator: NSObject {
                 redirectDepth: redirectDepth + 1,
                 rootGeneration: rootGeneration
             )
+        }
+
+        private static func normalizeRouteKey(_ routeKey: String) -> String {
+            routeKey.lowercased()
+        }
+
+        private static func makeParamsFingerprint(_ params: [String: Any]?) -> String {
+            guard let params, !params.isEmpty else { return "" }
+
+            return params.keys.sorted()
+                .map { "\($0)=\(describe(params[$0]))" }
+                .joined(separator: "&")
+        }
+
+        private static func describe(_ value: Any?) -> String {
+            guard let value else { return "nil" }
+
+            switch value {
+            case let value as Bool:
+                return "bool:\(value)"
+            case let value as String:
+                return "string:\(value)"
+            case let value as NSNumber:
+                return "number:\(value)"
+            case let value as URL:
+                return "url:\(value.absoluteString)"
+            case let value as [String: Any]:
+                return "dict:{\(makeParamsFingerprint(value))}"
+            case let value as [Any]:
+                return "array:[\(value.map { describe($0) }.joined(separator: ","))]"
+            default:
+                return "\(Swift.type(of: value)):\(String(describing: value))"
+            }
         }
     }
 
@@ -178,24 +245,22 @@ public final class IndustrialRouterCoordinator: NSObject {
     }
 
     private func send(_ request: RouteRequest) {
-        if Thread.isMainThread {
-            handleIncomingRouteRequest(request)
-        } else {
-            DispatchQueue.main.async { [weak self] in
-                self?.handleIncomingRouteRequest(request)
-            }
+        DispatchQueue.main.async { [weak self] in
+            self?.handleIncomingRouteRequest(request)
         }
     }
 
     private func handleIncomingRouteRequest(_ request: RouteRequest) {
         let now = CACurrentMediaTime()
 
-        guard now - lastAcceptedRouteTime >= routeReentryInterval else {
+        if let lastAcceptedRoute,
+           lastAcceptedRoute.signature == request.reentrySignature,
+           now - lastAcceptedRoute.time < routeReentryInterval {
             finish(request.responseSubject, result: nil)
             return
         }
 
-        lastAcceptedRouteTime = now
+        lastAcceptedRoute = RouteRequestStamp(signature: request.reentrySignature, time: now)
         routeRequestSubject.send(request)
     }
 
@@ -213,7 +278,7 @@ public final class IndustrialRouterCoordinator: NSObject {
         navigationController.delegate = self
         rootNavigationController = navigationController
         rootGeneration += 1
-        lastAcceptedRouteTime = 0
+        lastAcceptedRoute = nil
     }
 
     private func cancelPendingRoutesOnMain(result: Any?) {
@@ -296,6 +361,7 @@ private extension IndustrialRouterCoordinator {
         }
 
         targetViewController.routerRouteIdentity = request.path.stringValue
+        targetViewController.routerRouteFingerprint = request.routeFingerprint
         targetViewController.routerTransitionProvider = request.transitionProvider
         completionSubjects[ObjectIdentifier(targetViewController)] = request.responseSubject
 
@@ -354,6 +420,7 @@ private extension IndustrialRouterCoordinator {
         completion: (() -> Void)?
     ) {
         let presentedController: UIViewController
+        pendingModalTransitionProvider = request.transitionProvider
 
         if wrapInNavigation {
             let modalNavigationController = UINavigationController(rootViewController: targetViewController)
@@ -368,8 +435,7 @@ private extension IndustrialRouterCoordinator {
             presentedController = targetViewController
         }
 
-        if let transitionProvider = request.transitionProvider {
-            pendingModalTransitionProvider = transitionProvider
+        if request.transitionProvider != nil {
             presentedController.transitioningDelegate = self
         }
 
@@ -378,12 +444,15 @@ private extension IndustrialRouterCoordinator {
 
     func shouldRejectDuplicatedPush(_ request: RouteRequest) -> Bool {
         guard case .push = request.type,
-              let topViewController = activeNavigationController?.topViewController,
-              topViewController.routerRouteIdentity?.lowercased() == request.path.stringValue.lowercased() else {
+              let topViewController = activeNavigationController?.topViewController else {
             return false
         }
 
-        return true
+        if let topFingerprint = topViewController.routerRouteFingerprint {
+            return topFingerprint == request.routeFingerprint
+        }
+
+        return topViewController.routerRouteIdentity?.lowercased() == request.normalizedRouteKey
     }
 
     var activeNavigationController: UINavigationController? {
@@ -424,11 +493,11 @@ private extension IndustrialRouterCoordinator {
                     modalNavigationController.popViewController(animated: animated)
                 } else {
                     modalNavigationController.viewControllers.forEach { finish($0, result: result) }
-                    rootNavigationController.dismiss(animated: animated)
+                    dismissPresentedController(from: rootNavigationController, animated: animated)
                 }
             } else {
                 finish(presented, result: result)
-                rootNavigationController.dismiss(animated: animated)
+                dismissPresentedController(from: rootNavigationController, animated: animated)
             }
 
             return
@@ -479,6 +548,12 @@ private extension IndustrialRouterCoordinator {
         navigationController.popToRootViewController(animated: animated)
     }
 
+    func dismissPresentedController(from rootNavigationController: UINavigationController, animated: Bool) {
+        rootNavigationController.dismiss(animated: animated) { [weak self] in
+            self?.pendingModalTransitionProvider = nil
+        }
+    }
+
     func removeSourcePage(_ sourceViewController: UIViewController, from navigationController: UINavigationController) {
         guard navigationController.viewControllers.contains(sourceViewController) else { return }
 
@@ -490,9 +565,13 @@ private extension IndustrialRouterCoordinator {
 
     func cleanupPoppedControllers(in navigationController: UINavigationController) {
         let visibleIDs = Set(navigationController.viewControllers.map(ObjectIdentifier.init))
+        let idsToFinish = ownerNavigationControllers.compactMap { id, owner -> ObjectIdentifier? in
+            guard let ownerNavigationController = owner.value else { return id }
+            guard ownerNavigationController === navigationController, !visibleIDs.contains(id) else { return nil }
+            return id
+        }
 
-        for (id, owner) in ownerNavigationControllers {
-            guard owner.value === navigationController, !visibleIDs.contains(id) else { continue }
+        for id in idsToFinish {
             completionSubjects[id]?.send(nil)
             completionSubjects[id]?.send(completion: .finished)
             completionSubjects.removeValue(forKey: id)

@@ -146,8 +146,9 @@ final class HomeViewController: UIViewController {
     }
 
     @objc private func triggerReentryGuard() {
-        let first = demoRouter?.navigate(to: DemoRoute.detail, params: ["itemId": "R-1", "source": "first"])
-        let second = demoRouter?.navigate(to: DemoRoute.detail, params: ["itemId": "R-2", "source": "blocked"])
+        let duplicateParams = ["itemId": "R-1", "source": "reentry_guard"]
+        let first = demoRouter?.navigate(to: DemoRoute.detail, params: duplicateParams)
+        let second = demoRouter?.navigate(to: DemoRoute.detail, params: duplicateParams)
 
         first?.sink { result in
             DemoLogger.log("First reentry request finished: \(String(describing: result))")

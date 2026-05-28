@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'IndustrialRouter'
-  s.version = '0.1.0'
+  s.version = '0.1.1'
   s.summary = 'A Combine driven industrial UIKit router coordinator.'
   s.description = <<-DESC
 IndustrialRouter provides typed route navigation, deep link parsing, login interception,

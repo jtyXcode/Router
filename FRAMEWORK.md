@@ -15,7 +15,7 @@
 - 支持 push、Modal、Modal 内继续 push。
 - 支持显式 pop、popTo 指定页面和 popToRoot。
 - 支持 push 后移除当前页面，适用于登录成功、支付成功、流程重定向。
-- 支持 1 秒内防重入和重复 push 当前页面拦截。
+- 支持基于 `RoutePath + params + NavigationType` 签名的 1 秒防重入，以及重复 push 当前页面拦截。
 - 支持参数传递和 Combine 回调。
 - 支持自定义 push、pop、Modal 动画。
 - 支持频繁切换 rootViewController 时取消旧回调，避免旧路由污染新栈。
@@ -355,13 +355,57 @@ Modal present 和 dismiss 会使用同一个 transitioning delegate provider。
 
 ### 1 秒防重入
 
-同一个 Coordinator 在 1 秒内只接受第一次外部路由请求。被拦截的请求会立即返回 `nil` 并结束 publisher，避免调用方等待。
+Coordinator 会为每次路由请求生成一个稳定签名：
+
+```text
+normalized(RoutePath.stringValue) + paramsFingerprint + navigationTypeKey
+```
+
+其中：
+
+- `RoutePath.stringValue` 会统一转成小写，避免大小写不同导致签名不一致。
+- `paramsFingerprint` 会按参数 key 排序后生成稳定字符串，支持 `Bool`、`String`、`NSNumber`、`URL`、`[String: Any]`、`[Any]`。
+- `navigationTypeKey` 会区分 `push(popCurrent:)`、`modal(style:wrapInNavigation:)` 等跳转方式。
+
+同一个 Coordinator 在 1 秒内只会拦截签名完全一致的路由请求。被拦截的请求会立即返回 `nil` 并结束 publisher，避免调用方等待。
+
+因此下面两次请求会被视为重复进入：
+
+```swift
+router.navigate(
+    to: AppRoute.detail,
+    params: ["itemId": "SKU-1001", "source": "home"]
+)
+
+router.navigate(
+    to: AppRoute.detail,
+    params: ["source": "home", "itemId": "SKU-1001"]
+)
+```
+
+而下面两次请求不会被误拦截，因为参数不同：
+
+```swift
+router.navigate(to: AppRoute.detail, params: ["itemId": "SKU-1001"])
+router.navigate(to: AppRoute.detail, params: ["itemId": "SKU-1002"])
+```
+
+签名只用于短时间防重入，不替代业务幂等。下单、支付、提交表单等高风险动作仍建议在业务层做请求级幂等保护。
 
 ### 重复 push 当前页面拦截
 
-如果当前栈顶页面的 `routerRouteIdentity` 与目标路由一致，框架会拒绝本次 push，并返回 `nil`。
+框架会在目标页面入栈前写入两个内部标识：
+
+```text
+routerRouteIdentity    = RoutePath.stringValue
+routerRouteFingerprint = normalized(RoutePath.stringValue) + paramsFingerprint
+```
+
+如果当前栈顶页面的 `routerRouteFingerprint` 与目标路由一致，框架会拒绝本次 push，并返回 `nil`。如果历史页面没有 fingerprint，则回退使用 `routerRouteIdentity` 判断。
 
 这能避免按钮连点、网络回调重复触发导致同一个页面连续入栈。
+
+由于重复 push 当前页面也包含参数指纹，同一个详情页不同业务参数可以继续进入，例如从商品 `SKU-1001` 进入商品 `SKU-1002`。
 
 ## rootViewController 切换
 
@@ -379,7 +423,7 @@ router.replaceRootNavigationController(nav)
 - 取消旧 root 上的异步拦截任务
 - 结束旧页面的 pending callback
 - 增加 root generation，旧 root 的异步请求返回后不会污染新栈
-- 重置 1 秒防重入计时
+- 重置 1 秒防重入签名
 
 ## 多 UIWindowScene
 

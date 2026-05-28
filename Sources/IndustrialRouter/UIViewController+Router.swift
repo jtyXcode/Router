@@ -4,6 +4,7 @@ import ObjectiveC
 // MARK: - UIViewController Route Identity
 
 private var routerRouteIdentityKey: UInt8 = 0
+private var routerRouteFingerprintKey: UInt8 = 0
 private var routerTransitionProviderKey: UInt8 = 0
 
 extension UIViewController {
@@ -22,6 +23,15 @@ extension UIViewController {
         }
         set {
             objc_setAssociatedObject(self, &routerTransitionProviderKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    var routerRouteFingerprint: String? {
+        get {
+            objc_getAssociatedObject(self, &routerRouteFingerprintKey) as? String
+        }
+        set {
+            objc_setAssociatedObject(self, &routerRouteFingerprintKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
         }
     }
 }
