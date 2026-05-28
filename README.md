@@ -14,25 +14,30 @@ CocoaPods:
 
 ```ruby
 pod 'IndustrialRouter'
+pod 'IndustrialRouter', :git => 'https://github.com/jtyXcode/Router.git'
 ```
 
 Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/your-org/IndustrialRouter.git", from: "0.1.0")
+.package(url: "https://github.com/jtyXcode/Router.git", from: "0.1.0")
 ```
+
+Xcode 添加方式：`File` -> `Add Package Dependencies...`，输入 `https://github.com/jtyXcode/Router.git`，Dependency Rule 选择 `Up to Next Major Version`，版本填 `0.1.0`，最后把 `IndustrialRouter` product 添加到 App target。
 
 Carthage:
 
 ```ruby
-github "your-org/IndustrialRouter"
+github "jtyXcode/Router" ~> 0.1.0
 ```
 
 构建：
 
 ```bash
-carthage update --use-xcframeworks
+carthage update --use-xcframeworks --platform iOS
 ```
+
+然后在 Xcode 中打开 App target：`General` -> `Frameworks, Libraries, and Embedded Content`，添加 `Carthage/Build/IndustrialRouter.xcframework`，Embed 选择 `Embed & Sign`。
 
 ### Demo 测试场景
 
@@ -78,12 +83,12 @@ xcodebuild \
 发布前需要把库源码推到一个公开 Git 仓库，并创建与 `IndustrialRouter.podspec` 中 `s.version` 一致的 tag。
 
 ```bash
-POD_SOURCE_GIT_URL=https://github.com/your-org/IndustrialRouter.git \
-POD_HOMEPAGE_URL=https://github.com/your-org/IndustrialRouter \
+POD_SOURCE_GIT_URL=https://github.com/jtyXcode/Router.git \
+POD_HOMEPAGE_URL=https://github.com/jtyXcode/Router \
 Scripts/publish_cocoapods.sh --lint
 
-POD_SOURCE_GIT_URL=https://github.com/your-org/IndustrialRouter.git \
-POD_HOMEPAGE_URL=https://github.com/your-org/IndustrialRouter \
+POD_SOURCE_GIT_URL=https://github.com/jtyXcode/Router.git \
+POD_HOMEPAGE_URL=https://github.com/jtyXcode/Router \
 Scripts/publish_cocoapods.sh --push
 ```
 
@@ -104,20 +109,24 @@ pod 'IndustrialRouter'
 Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/your-org/IndustrialRouter.git", from: "0.1.0")
+.package(url: "https://github.com/jtyXcode/Router.git", from: "0.1.0")
 ```
+
+In Xcode: `File` -> `Add Package Dependencies...`, enter `https://github.com/jtyXcode/Router.git`, choose `Up to Next Major Version`, set the version to `0.1.0`, then add the `IndustrialRouter` product to your app target.
 
 Carthage:
 
 ```ruby
-github "your-org/IndustrialRouter"
+github "jtyXcode/Router" ~> 0.1.0
 ```
 
 Build:
 
 ```bash
-carthage update --use-xcframeworks
+carthage update --use-xcframeworks --platform iOS
 ```
+
+Then open your app target in Xcode: `General` -> `Frameworks, Libraries, and Embedded Content`, add `Carthage/Build/IndustrialRouter.xcframework`, and set Embed to `Embed & Sign`.
 
 ### Demo Scenarios
 
@@ -163,11 +172,11 @@ The `IndustrialRouter` scheme is shared and archives as a dynamic framework, whi
 Before publishing, push the library source to a public Git repository and create a tag matching `s.version` in `IndustrialRouter.podspec`.
 
 ```bash
-POD_SOURCE_GIT_URL=https://github.com/your-org/IndustrialRouter.git \
-POD_HOMEPAGE_URL=https://github.com/your-org/IndustrialRouter \
+POD_SOURCE_GIT_URL=https://github.com/jtyXcode/Router.git \
+POD_HOMEPAGE_URL=https://github.com/jtyXcode/Router \
 Scripts/publish_cocoapods.sh --lint
 
-POD_SOURCE_GIT_URL=https://github.com/your-org/IndustrialRouter.git \
-POD_HOMEPAGE_URL=https://github.com/your-org/IndustrialRouter \
+POD_SOURCE_GIT_URL=https://github.com/jtyXcode/Router.git \
+POD_HOMEPAGE_URL=https://github.com/jtyXcode/Router \
 Scripts/publish_cocoapods.sh --push
 ```

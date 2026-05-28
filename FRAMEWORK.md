@@ -65,22 +65,38 @@ s.frameworks = 'UIKit', 'Combine', 'QuartzCore'
 ### Carthage
 
 ```ruby
-github "your-org/IndustrialRouter"
+github "jtyXcode/Router" ~> 0.1.0
 ```
 
 构建：
 
 ```bash
-carthage update --use-xcframeworks
+carthage update --use-xcframeworks --platform iOS
 ```
+
+集成到 App：
+
+1. 打开 App target
+2. 进入 `General` -> `Frameworks, Libraries, and Embedded Content`
+3. 添加 `Carthage/Build/IndustrialRouter.xcframework`
+4. Embed 选择 `Embed & Sign`
+5. 代码中使用 `import IndustrialRouter`
 
 ### Swift Package Manager
 
 当前仓库也包含 `Package.swift`：
 
 ```swift
-.package(url: "https://github.com/your-org/IndustrialRouter.git", from: "0.1.0")
+.package(url: "https://github.com/jtyXcode/Router.git", from: "0.1.0")
 ```
+
+Xcode 图形界面安装：
+
+1. `File` -> `Add Package Dependencies...`
+2. 输入 `https://github.com/jtyXcode/Router.git`
+3. Dependency Rule 选择 `Up to Next Major Version`
+4. Version 填 `0.1.0`
+5. 勾选 `IndustrialRouter` product，并添加到 App target
 
 ## 快速接入
 
