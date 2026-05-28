@@ -1,0 +1,508 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A35A8A1D59125F84C3145B1 /* PopToTargetLevelOneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337FB6730E939824CAF0E318 /* PopToTargetLevelOneViewController.swift */; };
+		0A4754A0929B7949C2F67F95 /* DemoLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497F8A0B886B7B8808F4610 /* DemoLocalization.swift */; };
+		108503D9388279F84909AEBB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C05D7D89EF175D8BF63DB /* SceneDelegate.swift */; };
+		1540804B00ABE46E3D740BE2 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91353934EA7DB502488C30E /* ModalViewController.swift */; };
+		1D0A903D51F0E65378877705 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E90B0EF9358066C95EE9D8 /* SuccessViewController.swift */; };
+		27FECD53B4F3D98747EA690D /* IndustrialRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89CBA22ADE127821AB3A0C6C /* IndustrialRouter.framework */; };
+		28115B971872EA1EA0E924F0 /* DemoRouteBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FD6DA8F652FA1770CD89A /* DemoRouteBootstrap.swift */; };
+		462EF1FF6B413EEB0CFF5DAF /* RouteContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2105D599999E8D982FD86A /* RouteContracts.swift */; };
+		497282DD6A6E9FCA59C4D738 /* DeepLinkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D464744F11A3C235D03135EF /* DeepLinkParser.swift */; };
+		5D3F1417E8D35AD04AD95331 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C94DFFDE8F36F7B593B0BA1 /* HomeViewController.swift */; };
+		5E372EC8210BF7F37D9C7B88 /* WeakBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71933FFCB1E45521C203AE94 /* WeakBox.swift */; };
+		6167988BE1E6C4CCA1005AA2 /* IndustrialRouter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89CBA22ADE127821AB3A0C6C /* IndustrialRouter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		66EEF924FB95F2CA640F779A /* RouterSceneCoordinatorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86EB8636AE4F70E8985679C /* RouterSceneCoordinatorStore.swift */; };
+		71DFA9DB07305262F4FF1ED4 /* UIViewController+DemoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AB9C23B1C627C3EB0DDDF0 /* UIViewController+DemoRouter.swift */; };
+		8877E3F173DBE2B031490CE0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F96E1440200C3AACD781E28 /* LoginViewController.swift */; };
+		9572633259C05C6686A3CB28 /* UIViewController+Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBBAAD30D10394E1B23837D /* UIViewController+Router.swift */; };
+		98ED4D1D42F0F81C271D9A7F /* DemoLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12013ACB1DA19909C35B32E /* DemoLogger.swift */; };
+		99F4EF2BCBCE8D9C11379BA9 /* IndustrialRouterCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9B49FED98D3936439AA1AF /* IndustrialRouterCoordinator.swift */; };
+		A2AB80270F9767FA5D2CE754 /* DemoRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC5CA34918CF7A8139BD827 /* DemoRoutes.swift */; };
+		AB6432A0E5FAE6B4C6EE27CE /* PopRootLevelOneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE22C1A41C417F6D198147C /* PopRootLevelOneViewController.swift */; };
+		AE4C1C928C86A9819457C04D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D42C4FEE33355F0DE8DA7C /* AppDelegate.swift */; };
+		BC37D8622BC1BC810ED69295 /* ProtectedCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24FB6748EC2BE890CA52D02 /* ProtectedCenterViewController.swift */; };
+		C1849132E4636A2E16042FDE /* PopTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5284004EFF79477E6555E93 /* PopTestViewController.swift */; };
+		C7070DAA0D67312E89A1AD5E /* PopToTargetLevelTwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E179E84DA486D91E98E7B40 /* PopToTargetLevelTwoViewController.swift */; };
+		D41BDA9EA0455F33234751DD /* PopRootLevelTwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190AB09E352BF340B15F5565 /* PopRootLevelTwoViewController.swift */; };
+		D47BE7012E4ADDA754B06E70 /* DemoNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CCF1ACF4F91C21E06607E9 /* DemoNavigationController.swift */; };
+		EA92621F1539B35251DB58A8 /* RouteViewControllerRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740E06106BF853AF1038F954 /* RouteViewControllerRegistry.swift */; };
+		F55464F40A792E5BBA8E5FC4 /* DemoFadeAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA8F712ABB44F5C40726E7 /* DemoFadeAnimator.swift */; };
+		FC2B6A04FEFFFF3A5980F811 /* IntermediateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA979F0F67FA02ED78734836 /* IntermediateViewController.swift */; };
+		FF2A8241FCABEEF233A8AD58 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB218374B9269C1C82E8929 /* DetailViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EA37365E4E48767D8C20AD45 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F9B88BFB745B88AC0965111;
+			remoteInfo = IndustrialRouter;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7AA59F7E3B2CE455064BA8CB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6167988BE1E6C4CCA1005AA2 /* IndustrialRouter.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		13CCF1ACF4F91C21E06607E9 /* DemoNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoNavigationController.swift; sourceTree = "<group>"; };
+		190AB09E352BF340B15F5565 /* PopRootLevelTwoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopRootLevelTwoViewController.swift; sourceTree = "<group>"; };
+		1BC5CA34918CF7A8139BD827 /* DemoRoutes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoRoutes.swift; sourceTree = "<group>"; };
+		20D42C4FEE33355F0DE8DA7C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2E179E84DA486D91E98E7B40 /* PopToTargetLevelTwoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopToTargetLevelTwoViewController.swift; sourceTree = "<group>"; };
+		337FB6730E939824CAF0E318 /* PopToTargetLevelOneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopToTargetLevelOneViewController.swift; sourceTree = "<group>"; };
+		3FB218374B9269C1C82E8929 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		4C94DFFDE8F36F7B593B0BA1 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		71933FFCB1E45521C203AE94 /* WeakBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakBox.swift; sourceTree = "<group>"; };
+		740E06106BF853AF1038F954 /* RouteViewControllerRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewControllerRegistry.swift; sourceTree = "<group>"; };
+		78E90B0EF9358066C95EE9D8 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
+		7F6C05D7D89EF175D8BF63DB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		7F96E1440200C3AACD781E28 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		89CBA22ADE127821AB3A0C6C /* IndustrialRouter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IndustrialRouter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DBBAAD30D10394E1B23837D /* UIViewController+Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Router.swift"; sourceTree = "<group>"; };
+		A12013ACB1DA19909C35B32E /* DemoLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoLogger.swift; sourceTree = "<group>"; };
+		A24FB6748EC2BE890CA52D02 /* ProtectedCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectedCenterViewController.swift; sourceTree = "<group>"; };
+		A34FD6DA8F652FA1770CD89A /* DemoRouteBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoRouteBootstrap.swift; sourceTree = "<group>"; };
+		A86EB8636AE4F70E8985679C /* RouterSceneCoordinatorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterSceneCoordinatorStore.swift; sourceTree = "<group>"; };
+		AAE22C1A41C417F6D198147C /* PopRootLevelOneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopRootLevelOneViewController.swift; sourceTree = "<group>"; };
+		ADDA8F712ABB44F5C40726E7 /* DemoFadeAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoFadeAnimator.swift; sourceTree = "<group>"; };
+		B9CA11B6608C7063816BC0F2 /* IndustrialRouterDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IndustrialRouterDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D464744F11A3C235D03135EF /* DeepLinkParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkParser.swift; sourceTree = "<group>"; };
+		D5284004EFF79477E6555E93 /* PopTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTestViewController.swift; sourceTree = "<group>"; };
+		D7E02F1666F89848ED5F7F68 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9AB9C23B1C627C3EB0DDDF0 /* UIViewController+DemoRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DemoRouter.swift"; sourceTree = "<group>"; };
+		DD2105D599999E8D982FD86A /* RouteContracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteContracts.swift; sourceTree = "<group>"; };
+		E91353934EA7DB502488C30E /* ModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewController.swift; sourceTree = "<group>"; };
+		EA979F0F67FA02ED78734836 /* IntermediateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntermediateViewController.swift; sourceTree = "<group>"; };
+		F497F8A0B886B7B8808F4610 /* DemoLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoLocalization.swift; sourceTree = "<group>"; };
+		FD9B49FED98D3936439AA1AF /* IndustrialRouterCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndustrialRouterCoordinator.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5011F028D2E1FA7488484DFF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6ED797CE764A231078CA4FB2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27FECD53B4F3D98747EA690D /* IndustrialRouter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5928955287B8089ED2177128 = {
+			isa = PBXGroup;
+			children = (
+				D685C104AFFBCF83C7CB0FB6 /* Sources/IndustrialRouter */,
+				CA344EF92E09D04B85259A93 /* Demo/IndustrialRouterDemo */,
+				BF7A2D27A78D590BDEF15AF2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BF7A2D27A78D590BDEF15AF2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				89CBA22ADE127821AB3A0C6C /* IndustrialRouter.framework */,
+				B9CA11B6608C7063816BC0F2 /* IndustrialRouterDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CA344EF92E09D04B85259A93 /* Demo/IndustrialRouterDemo */ = {
+			isa = PBXGroup;
+			children = (
+				20D42C4FEE33355F0DE8DA7C /* AppDelegate.swift */,
+				ADDA8F712ABB44F5C40726E7 /* DemoFadeAnimator.swift */,
+				F497F8A0B886B7B8808F4610 /* DemoLocalization.swift */,
+				A12013ACB1DA19909C35B32E /* DemoLogger.swift */,
+				13CCF1ACF4F91C21E06607E9 /* DemoNavigationController.swift */,
+				A34FD6DA8F652FA1770CD89A /* DemoRouteBootstrap.swift */,
+				1BC5CA34918CF7A8139BD827 /* DemoRoutes.swift */,
+				3FB218374B9269C1C82E8929 /* DetailViewController.swift */,
+				4C94DFFDE8F36F7B593B0BA1 /* HomeViewController.swift */,
+				EA979F0F67FA02ED78734836 /* IntermediateViewController.swift */,
+				7F96E1440200C3AACD781E28 /* LoginViewController.swift */,
+				E91353934EA7DB502488C30E /* ModalViewController.swift */,
+				AAE22C1A41C417F6D198147C /* PopRootLevelOneViewController.swift */,
+				190AB09E352BF340B15F5565 /* PopRootLevelTwoViewController.swift */,
+				D5284004EFF79477E6555E93 /* PopTestViewController.swift */,
+				337FB6730E939824CAF0E318 /* PopToTargetLevelOneViewController.swift */,
+				2E179E84DA486D91E98E7B40 /* PopToTargetLevelTwoViewController.swift */,
+				A24FB6748EC2BE890CA52D02 /* ProtectedCenterViewController.swift */,
+				7F6C05D7D89EF175D8BF63DB /* SceneDelegate.swift */,
+				78E90B0EF9358066C95EE9D8 /* SuccessViewController.swift */,
+				D9AB9C23B1C627C3EB0DDDF0 /* UIViewController+DemoRouter.swift */,
+				D7E02F1666F89848ED5F7F68 /* Info.plist */,
+			);
+			path = Demo/IndustrialRouterDemo;
+			sourceTree = "<group>";
+		};
+		D685C104AFFBCF83C7CB0FB6 /* Sources/IndustrialRouter */ = {
+			isa = PBXGroup;
+			children = (
+				D464744F11A3C235D03135EF /* DeepLinkParser.swift */,
+				FD9B49FED98D3936439AA1AF /* IndustrialRouterCoordinator.swift */,
+				DD2105D599999E8D982FD86A /* RouteContracts.swift */,
+				740E06106BF853AF1038F954 /* RouteViewControllerRegistry.swift */,
+				A86EB8636AE4F70E8985679C /* RouterSceneCoordinatorStore.swift */,
+				9DBBAAD30D10394E1B23837D /* UIViewController+Router.swift */,
+				71933FFCB1E45521C203AE94 /* WeakBox.swift */,
+			);
+			path = Sources/IndustrialRouter;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1F9B88BFB745B88AC0965111 /* IndustrialRouter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 81574AABCD153B712B0CF990 /* Build configuration list for PBXNativeTarget "IndustrialRouter" */;
+			buildPhases = (
+				ADB9FE424F7600CABFC23642 /* Sources */,
+				5011F028D2E1FA7488484DFF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IndustrialRouter;
+			productName = IndustrialRouter;
+			productReference = 89CBA22ADE127821AB3A0C6C /* IndustrialRouter.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		B28E3D254BCEF086E7E98522 /* IndustrialRouterDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 76D9A2AA13357264BBF56025 /* Build configuration list for PBXNativeTarget "IndustrialRouterDemo" */;
+			buildPhases = (
+				A6A05B1D1885DC9EF44D2B9C /* Sources */,
+				6ED797CE764A231078CA4FB2 /* Frameworks */,
+				7AA59F7E3B2CE455064BA8CB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB4A82866341F47711DD003C /* PBXTargetDependency */,
+			);
+			name = IndustrialRouterDemo;
+			productName = IndustrialRouterDemo;
+			productReference = B9CA11B6608C7063816BC0F2 /* IndustrialRouterDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46F86FAA6BBF9AC94A7E4595 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					1F9B88BFB745B88AC0965111 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					B28E3D254BCEF086E7E98522 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = 9D908D8792E5642B2623649E /* Build configuration list for PBXProject "IndustrialRouter" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5928955287B8089ED2177128;
+			productRefGroup = BF7A2D27A78D590BDEF15AF2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1F9B88BFB745B88AC0965111 /* IndustrialRouter */,
+				B28E3D254BCEF086E7E98522 /* IndustrialRouterDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A6A05B1D1885DC9EF44D2B9C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE4C1C928C86A9819457C04D /* AppDelegate.swift in Sources */,
+				F55464F40A792E5BBA8E5FC4 /* DemoFadeAnimator.swift in Sources */,
+				0A4754A0929B7949C2F67F95 /* DemoLocalization.swift in Sources */,
+				98ED4D1D42F0F81C271D9A7F /* DemoLogger.swift in Sources */,
+				D47BE7012E4ADDA754B06E70 /* DemoNavigationController.swift in Sources */,
+				28115B971872EA1EA0E924F0 /* DemoRouteBootstrap.swift in Sources */,
+				A2AB80270F9767FA5D2CE754 /* DemoRoutes.swift in Sources */,
+				FF2A8241FCABEEF233A8AD58 /* DetailViewController.swift in Sources */,
+				5D3F1417E8D35AD04AD95331 /* HomeViewController.swift in Sources */,
+				FC2B6A04FEFFFF3A5980F811 /* IntermediateViewController.swift in Sources */,
+				8877E3F173DBE2B031490CE0 /* LoginViewController.swift in Sources */,
+				1540804B00ABE46E3D740BE2 /* ModalViewController.swift in Sources */,
+				AB6432A0E5FAE6B4C6EE27CE /* PopRootLevelOneViewController.swift in Sources */,
+				D41BDA9EA0455F33234751DD /* PopRootLevelTwoViewController.swift in Sources */,
+				C1849132E4636A2E16042FDE /* PopTestViewController.swift in Sources */,
+				0A35A8A1D59125F84C3145B1 /* PopToTargetLevelOneViewController.swift in Sources */,
+				C7070DAA0D67312E89A1AD5E /* PopToTargetLevelTwoViewController.swift in Sources */,
+				BC37D8622BC1BC810ED69295 /* ProtectedCenterViewController.swift in Sources */,
+				108503D9388279F84909AEBB /* SceneDelegate.swift in Sources */,
+				1D0A903D51F0E65378877705 /* SuccessViewController.swift in Sources */,
+				71DFA9DB07305262F4FF1ED4 /* UIViewController+DemoRouter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ADB9FE424F7600CABFC23642 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				497282DD6A6E9FCA59C4D738 /* DeepLinkParser.swift in Sources */,
+				99F4EF2BCBCE8D9C11379BA9 /* IndustrialRouterCoordinator.swift in Sources */,
+				462EF1FF6B413EEB0CFF5DAF /* RouteContracts.swift in Sources */,
+				EA92621F1539B35251DB58A8 /* RouteViewControllerRegistry.swift in Sources */,
+				66EEF924FB95F2CA640F779A /* RouterSceneCoordinatorStore.swift in Sources */,
+				9572633259C05C6686A3CB28 /* UIViewController+Router.swift in Sources */,
+				5E372EC8210BF7F37D9C7B88 /* WeakBox.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AB4A82866341F47711DD003C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F9B88BFB745B88AC0965111 /* IndustrialRouter */;
+			targetProxy = EA37365E4E48767D8C20AD45 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		189D56DE85F89520581145D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.7;
+			};
+			name = Debug;
+		};
+		30547E9EC5F49CB55604B54F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.7;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		382938CF74299F147203FC11 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6E9ARQD7Y3;
+				INFOPLIST_FILE = Demo/IndustrialRouterDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.industrialrouter.demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.7;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6CA486B9EDF94DA1287C7B31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.industrialrouter.framework;
+				PRODUCT_MODULE_NAME = IndustrialRouter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_VERSION = 5.7;
+			};
+			name = Debug;
+		};
+		EBE68FA1A30CDEE0CDFAA464 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6E9ARQD7Y3;
+				INFOPLIST_FILE = Demo/IndustrialRouterDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.industrialrouter.demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.7;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FAFB4A40B31C76EBB32519E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.industrialrouter.framework;
+				PRODUCT_MODULE_NAME = IndustrialRouter;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = NO;
+				SWIFT_VERSION = 5.7;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		76D9A2AA13357264BBF56025 /* Build configuration list for PBXNativeTarget "IndustrialRouterDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				382938CF74299F147203FC11 /* Debug */,
+				EBE68FA1A30CDEE0CDFAA464 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		81574AABCD153B712B0CF990 /* Build configuration list for PBXNativeTarget "IndustrialRouter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6CA486B9EDF94DA1287C7B31 /* Debug */,
+				FAFB4A40B31C76EBB32519E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9D908D8792E5642B2623649E /* Build configuration list for PBXProject "IndustrialRouter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				189D56DE85F89520581145D8 /* Debug */,
+				30547E9EC5F49CB55604B54F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+}
