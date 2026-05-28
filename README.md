@@ -58,6 +58,10 @@ Demo App 提供手动测试场景，首页支持中文 / English 切换。
 - 多 `UIWindowScene`
 - 侧滑返回后的回调关闭和页面释放
 
+### Privacy Manifest
+
+库内置 `Sources/IndustrialRouter/Resources/PrivacyInfo.xcprivacy`。当前框架不采集用户数据、不做追踪，也未使用需要声明 reason 的敏感系统 API；CocoaPods、SPM、Carthage / Xcode framework 集成都会带上该清单。
+
 打开 `IndustrialRouter.xcodeproj`，选择 `IndustrialRouterDemo` scheme 运行。首页每个按钮对应一个路由场景，执行结果会写入页面内日志。
 
 ### 命令行验证
@@ -146,6 +150,10 @@ The demo app contains manual scenario tests. The home screen supports Chinese / 
 - root view controller replacement
 - one coordinator per `UIWindowScene`
 - callback cleanup and view controller release after interactive swipe back
+
+### Privacy Manifest
+
+The library includes `Sources/IndustrialRouter/Resources/PrivacyInfo.xcprivacy`. The current framework does not collect user data, does not track users, and does not use required-reason APIs. CocoaPods, SPM, and Carthage / Xcode framework integrations all include the manifest.
 
 Open `IndustrialRouter.xcodeproj` and run the `IndustrialRouterDemo` scheme. The home screen is a scenario panel; each button triggers one routing case and writes the observed result into the on-screen log.
 

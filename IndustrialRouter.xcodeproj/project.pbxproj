@@ -20,6 +20,7 @@
 		5E372EC8210BF7F37D9C7B88 /* WeakBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71933FFCB1E45521C203AE94 /* WeakBox.swift */; };
 		6167988BE1E6C4CCA1005AA2 /* IndustrialRouter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89CBA22ADE127821AB3A0C6C /* IndustrialRouter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		66EEF924FB95F2CA640F779A /* RouterSceneCoordinatorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86EB8636AE4F70E8985679C /* RouterSceneCoordinatorStore.swift */; };
+		6A5F7C2A6C284F8B9778E0F1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6A5F7C296C284F8B9778E0F1 /* PrivacyInfo.xcprivacy */; };
 		71DFA9DB07305262F4FF1ED4 /* UIViewController+DemoRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AB9C23B1C627C3EB0DDDF0 /* UIViewController+DemoRouter.swift */; };
 		8877E3F173DBE2B031490CE0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F96E1440200C3AACD781E28 /* LoginViewController.swift */; };
 		9572633259C05C6686A3CB28 /* UIViewController+Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBBAAD30D10394E1B23837D /* UIViewController+Router.swift */; };
@@ -73,6 +74,7 @@
 		3FB218374B9269C1C82E8929 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		4C94DFFDE8F36F7B593B0BA1 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		71933FFCB1E45521C203AE94 /* WeakBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakBox.swift; sourceTree = "<group>"; };
+		6A5F7C296C284F8B9778E0F1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		740E06106BF853AF1038F954 /* RouteViewControllerRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewControllerRegistry.swift; sourceTree = "<group>"; };
 		78E90B0EF9358066C95EE9D8 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
 		7F6C05D7D89EF175D8BF63DB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -163,6 +165,14 @@
 			path = Demo/IndustrialRouterDemo;
 			sourceTree = "<group>";
 		};
+		CF0D8A5C1A7045CC82F8A6A2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6A5F7C296C284F8B9778E0F1 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		D685C104AFFBCF83C7CB0FB6 /* Sources/IndustrialRouter */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +183,7 @@
 				A86EB8636AE4F70E8985679C /* RouterSceneCoordinatorStore.swift */,
 				9DBBAAD30D10394E1B23837D /* UIViewController+Router.swift */,
 				71933FFCB1E45521C203AE94 /* WeakBox.swift */,
+				CF0D8A5C1A7045CC82F8A6A2 /* Resources */,
 			);
 			path = Sources/IndustrialRouter;
 			sourceTree = "<group>";
@@ -186,6 +197,7 @@
 			buildPhases = (
 				ADB9FE424F7600CABFC23642 /* Sources */,
 				5011F028D2E1FA7488484DFF /* Frameworks */,
+				6A5F7C2B6C284F8B9778E0F1 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -250,6 +262,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6A5F7C2B6C284F8B9778E0F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A5F7C2A6C284F8B9778E0F1 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A6A05B1D1885DC9EF44D2B9C /* Sources */ = {

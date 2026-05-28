@@ -16,7 +16,10 @@ let package = Package(
     targets: [
         .target(
             name: "IndustrialRouter",
-            path: "Sources/IndustrialRouter"
+            path: "Sources/IndustrialRouter",
+            resources: [
+                .process("Resources")
+            ]
         )
     ],
     swiftLanguageVersions: [.v5]

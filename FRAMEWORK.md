@@ -32,7 +32,9 @@ Sources/IndustrialRouter
 ├── IndustrialRouterCoordinator.swift # 核心 Coordinator
 ├── RouterSceneCoordinatorStore.swift # 多 UIWindowScene 管理
 ├── UIViewController+Router.swift     # 路由身份和动画 provider 绑定
-└── WeakBox.swift                     # 弱引用容器
+├── WeakBox.swift                     # 弱引用容器
+└── Resources
+    └── PrivacyInfo.xcprivacy         # Apple 隐私清单
 ```
 
 Demo 目录：
@@ -59,6 +61,9 @@ pod 'IndustrialRouter'
 ```ruby
 s.ios.deployment_target = '13.0'
 s.source_files = 'Sources/IndustrialRouter/**/*.swift'
+s.resource_bundles = {
+  'IndustrialRouterPrivacy' => ['Sources/IndustrialRouter/Resources/PrivacyInfo.xcprivacy']
+}
 s.frameworks = 'UIKit', 'Combine', 'QuartzCore'
 ```
 
@@ -350,6 +355,27 @@ router.navigate(
 ```
 
 Modal present 和 dismiss 会使用同一个 transitioning delegate provider。
+
+## PrivacyInfo.xcprivacy
+
+库内置 Apple 隐私清单：
+
+```text
+Sources/IndustrialRouter/Resources/PrivacyInfo.xcprivacy
+```
+
+当前框架只负责 UIKit 页面路由、Combine 回调、DeepLink 解析和转场调度，不采集用户数据，不做跨 App / 跨网站追踪，也没有在库源码中使用需要声明 reason 的敏感系统 API。因此清单声明为：
+
+- `NSPrivacyTracking = false`
+- `NSPrivacyTrackingDomains = []`
+- `NSPrivacyCollectedDataTypes = []`
+- `NSPrivacyAccessedAPITypes = []`
+
+三种集成方式的处理：
+
+- CocoaPods：通过 `s.resource_bundles` 打入 `IndustrialRouterPrivacy.bundle`
+- Swift Package Manager：通过 target resources 处理 `Resources`
+- Carthage / Xcode framework：`IndustrialRouter` target 的 Resources phase 会把清单拷入 framework
 
 ## 防重入与重复 Push
 

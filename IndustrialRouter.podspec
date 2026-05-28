@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'IndustrialRouter'
-  s.version = '0.1.1'
+  s.version = '0.1.2'
   s.summary = 'A Combine driven industrial UIKit router coordinator.'
   s.description = <<-DESC
 IndustrialRouter provides typed route navigation, deep link parsing, login interception,
@@ -14,6 +14,8 @@ root replacement handling, and multi UIWindowScene coordinator storage.
   s.ios.deployment_target = '13.0'
   s.swift_versions = ['5.7', '5.8', '5.9', '5.10']
   s.source_files = 'Sources/IndustrialRouter/**/*.swift'
+  s.resource_bundles = {
+    'IndustrialRouterPrivacy' => ['Sources/IndustrialRouter/Resources/PrivacyInfo.xcprivacy']
+  }
   s.frameworks = 'UIKit', 'Combine', 'QuartzCore'
 end
-
