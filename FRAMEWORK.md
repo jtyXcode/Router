@@ -56,16 +56,6 @@ Demo/IndustrialRouterDemo
 pod 'IndustrialRouter'
 ```
 
-当前 podspec：
-
-```ruby
-s.ios.deployment_target = '13.0'
-s.source_files = 'Sources/IndustrialRouter/**/*.swift'
-s.resource_bundles = {
-  'IndustrialRouterPrivacy' => ['Sources/IndustrialRouter/Resources/PrivacyInfo.xcprivacy']
-}
-s.frameworks = 'UIKit', 'Combine', 'QuartzCore'
-```
 
 ### Carthage
 
@@ -356,13 +346,6 @@ router.navigate(
 
 Modal present 和 dismiss 会使用同一个 transitioning delegate provider。
 
-## PrivacyInfo.xcprivacy
-
-库内置 Apple 隐私清单：
-
-```text
-Sources/IndustrialRouter/Resources/PrivacyInfo.xcprivacy
-```
 
 当前框架只负责 UIKit 页面路由、Combine 回调、DeepLink 解析和转场调度，不采集用户数据，不做跨 App / 跨网站追踪，也没有在库源码中使用需要声明 reason 的敏感系统 API。因此清单声明为：
 
