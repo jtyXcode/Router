@@ -11,6 +11,7 @@
 		0A4754A0929B7949C2F67F95 /* DemoLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497F8A0B886B7B8808F4610 /* DemoLocalization.swift */; };
 		108503D9388279F84909AEBB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F6C05D7D89EF175D8BF63DB /* SceneDelegate.swift */; };
 		1540804B00ABE46E3D740BE2 /* ModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91353934EA7DB502488C30E /* ModalViewController.swift */; };
+		1799206DDCC6A664C8E8BAAC /* RouteSwiftUIHosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584C6F032CBEBA7763D6628E /* RouteSwiftUIHosting.swift */; };
 		1D0A903D51F0E65378877705 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E90B0EF9358066C95EE9D8 /* SuccessViewController.swift */; };
 		27FECD53B4F3D98747EA690D /* IndustrialRouter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89CBA22ADE127821AB3A0C6C /* IndustrialRouter.framework */; };
 		28115B971872EA1EA0E924F0 /* DemoRouteBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34FD6DA8F652FA1770CD89A /* DemoRouteBootstrap.swift */; };
@@ -73,6 +74,7 @@
 		337FB6730E939824CAF0E318 /* PopToTargetLevelOneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopToTargetLevelOneViewController.swift; sourceTree = "<group>"; };
 		3FB218374B9269C1C82E8929 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		4C94DFFDE8F36F7B593B0BA1 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		584C6F032CBEBA7763D6628E /* RouteSwiftUIHosting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSwiftUIHosting.swift; sourceTree = "<group>"; };
 		71933FFCB1E45521C203AE94 /* WeakBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakBox.swift; sourceTree = "<group>"; };
 		6A5F7C296C284F8B9778E0F1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		740E06106BF853AF1038F954 /* RouteViewControllerRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteViewControllerRegistry.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				D464744F11A3C235D03135EF /* DeepLinkParser.swift */,
 				FD9B49FED98D3936439AA1AF /* IndustrialRouterCoordinator.swift */,
 				DD2105D599999E8D982FD86A /* RouteContracts.swift */,
+				584C6F032CBEBA7763D6628E /* RouteSwiftUIHosting.swift */,
 				740E06106BF853AF1038F954 /* RouteViewControllerRegistry.swift */,
 				A86EB8636AE4F70E8985679C /* RouterSceneCoordinatorStore.swift */,
 				9DBBAAD30D10394E1B23837D /* UIViewController+Router.swift */,
@@ -310,6 +313,7 @@
 				497282DD6A6E9FCA59C4D738 /* DeepLinkParser.swift in Sources */,
 				99F4EF2BCBCE8D9C11379BA9 /* IndustrialRouterCoordinator.swift in Sources */,
 				462EF1FF6B413EEB0CFF5DAF /* RouteContracts.swift in Sources */,
+				1799206DDCC6A664C8E8BAAC /* RouteSwiftUIHosting.swift in Sources */,
 				EA92621F1539B35251DB58A8 /* RouteViewControllerRegistry.swift in Sources */,
 				66EEF924FB95F2CA640F779A /* RouterSceneCoordinatorStore.swift in Sources */,
 				9572633259C05C6686A3CB28 /* UIViewController+Router.swift in Sources */,

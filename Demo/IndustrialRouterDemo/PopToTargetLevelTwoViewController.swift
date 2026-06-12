@@ -3,12 +3,22 @@ import Combine
 import IndustrialRouter
 
 final class PopToTargetLevelTwoViewController: UIViewController {
+    private let targetScenarioId: String
     private var cancellables = Set<AnyCancellable>()
     private let messageLabel = UILabel()
     private let popToButton = UIButton(type: .system)
 
+    init(targetScenarioId: String?) {
+        self.targetScenarioId = targetScenarioId ?? "target-A"
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     deinit {
-        DemoLogger.log("deinit PopToTargetLevelTwoViewController")
+        DemoLogger.log("deinit PopToTargetLevelTwoViewController targetScenarioId=\(targetScenarioId)")
     }
 
     override func viewDidLoad() {
@@ -56,11 +66,15 @@ final class PopToTargetLevelTwoViewController: UIViewController {
 
     private func applyLocalizedText() {
         title = demoText(.popToTargetLevelTwoTitle)
-        messageLabel.text = demoText(.popToTargetLevelTwoMessage)
+        messageLabel.text = "\(demoText(.popToTargetLevelTwoMessage))\ntargetScenarioId: \(targetScenarioId)"
         popToButton.setTitle(demoText(.popToTargetLevelTwoButton), for: .normal)
     }
 
     @objc private func popToTargetPage() {
-        demoRouter?.popTo(path: DemoRoute.popToTargetLevelOne, result: "pop_to_target_done")
+        demoRouter?.popTo(
+            path: DemoRoute.popToTargetLevelOne,
+            params: ["scenarioId": targetScenarioId],
+            result: "pop_to_target_done"
+        )
     }
 }

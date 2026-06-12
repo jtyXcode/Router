@@ -4,7 +4,7 @@
 
 最低支持版本：iOS 13.0  
 语言：Swift 5.7+  
-依赖：UIKit、Combine、QuartzCore
+依赖：UIKit、Combine、QuartzCore；SwiftUI 为可选桥接能力
 
 ## 设计目标
 
@@ -14,10 +14,12 @@
 - 支持登录拦截、异步拦截和路由重定向。
 - 支持 push、Modal、Modal 内继续 push。
 - 支持显式 pop、popTo 指定页面和 popToRoot。
+- 支持 `popTo(path:params:)`，同一个 route 多次入栈时可按参数精确返回。
 - 支持 push 后移除当前页面，适用于登录成功、支付成功、流程重定向。
 - 支持基于 `RoutePath + params + NavigationType` 签名的 1 秒防重入，以及重复 push 当前页面拦截。
 - 支持参数传递和 Combine 回调。
 - 支持自定义 push、pop、Modal 动画。
+- 支持 SwiftUI 页面通过 `UIHostingController` 注册到 UIKit Router。
 - 支持频繁切换 rootViewController 时取消旧回调，避免旧路由污染新栈。
 - 支持多个 `UIWindowScene`，每个 Scene 独立 Coordinator。
 - 支持系统返回、侧滑返回后的回调关闭和资源释放。
@@ -30,6 +32,7 @@ Sources/IndustrialRouter
 ├── RouteViewControllerRegistry.swift # 路由到 UIViewController 的注册工厂
 ├── DeepLinkParser.swift              # 自定义 link 解析和映射
 ├── IndustrialRouterCoordinator.swift # 核心 Coordinator
+├── RouteSwiftUIHosting.swift         # SwiftUI View 的 UIHostingController 注册桥接
 ├── RouterSceneCoordinatorStore.swift # 多 UIWindowScene 管理
 ├── UIViewController+Router.swift     # 路由身份和动画 provider 绑定
 ├── WeakBox.swift                     # 弱引用容器
@@ -60,7 +63,7 @@ pod 'IndustrialRouter'
 ### Carthage
 
 ```ruby
-github "jtyXcode/Router" ~> 0.1.0
+github "jtyXcode/Router" ~> 0.1.2
 ```
 
 构建：
@@ -82,7 +85,7 @@ carthage update --use-xcframeworks --platform iOS
 当前仓库也包含 `Package.swift`：
 
 ```swift
-.package(url: "https://github.com/jtyXcode/Router.git", from: "0.1.0")
+.package(url: "https://github.com/jtyXcode/Router.git", from: "0.1.2")
 ```
 
 Xcode 图形界面安装：
@@ -90,7 +93,7 @@ Xcode 图形界面安装：
 1. `File` -> `Add Package Dependencies...`
 2. 输入 `https://github.com/jtyXcode/Router.git`
 3. Dependency Rule 选择 `Up to Next Major Version`
-4. Version 填 `0.1.0`
+4. Version 填 `0.1.2`
 5. 勾选 `IndustrialRouter` product，并添加到 App target
 
 ## 快速接入
@@ -124,6 +127,20 @@ RouteViewControllerRegistry.shared.register(AppRoute.login) { context in
     LoginViewController()
 }
 ```
+
+SwiftUI 页面可以直接注册为 `UIHostingController`：
+
+```swift
+import SwiftUI
+
+RouteViewControllerRegistry.shared.registerHosting(AppRoute.detail) { context in
+    GoodsDetailView(
+        itemId: context.params?["itemId"] as? String
+    )
+}
+```
+
+这不是 SwiftUI 原生 `NavigationStack` Router，而是把 SwiftUI View 包装进 UIKit 导航体系。它适合 UIKit / SwiftUI 混编项目；纯 SwiftUI App 如果希望完全使用 `NavigationStack`、`NavigationPath` 和 SwiftUI 状态驱动路由，需要另行封装 SwiftUI 原生 Router。
 
 ### 3. Scene 中初始化 Coordinator
 
@@ -220,6 +237,22 @@ router.popTo(path: AppRoute.detail, result: "pop_to_target_done")
 ```
 
 `popTo(path:)` 会在当前活跃导航栈中查找最近一个匹配该路由 identity 的页面，并返回到该页面。目标页面本身不会收到 result；目标页之上的所有页面会收到 result、完成 publisher、移除回调缓存。
+
+如果同一个 route 在栈里出现多次，而且参数不同，使用 `params` 精确匹配：
+
+```swift
+router.popTo(
+    path: AppRoute.detail,
+    params: ["itemId": "SKU-1001"],
+    result: "pop_to_target_done"
+)
+```
+
+规则：
+
+- `params == nil`：保持兼容，按 `RoutePath.stringValue` 匹配最近的同 route 页面。
+- `params != nil`：按 `normalized(RoutePath.stringValue) + paramsFingerprint` 精确匹配目标页面。
+- 参数 fingerprint 与防重入、重复 push 使用同一套算法，避免同一业务参数在不同 API 中判断不一致。
 
 ### PopToRoot
 
@@ -346,6 +379,7 @@ router.navigate(
 
 Modal present 和 dismiss 会使用同一个 transitioning delegate provider。
 
+## PrivacyInfo.xcprivacy
 
 当前框架只负责 UIKit 页面路由、Combine 回调、DeepLink 解析和转场调度，不采集用户数据，不做跨 App / 跨网站追踪，也没有在库源码中使用需要声明 reason 的敏感系统 API。因此清单声明为：
 
@@ -407,7 +441,7 @@ router.navigate(to: AppRoute.detail, params: ["itemId": "SKU-1002"])
 
 ```text
 routerRouteIdentity    = RoutePath.stringValue
-routerRouteFingerprint = normalized(RoutePath.stringValue) + paramsFingerprint
+routerRouteFingerprint = canonicalFingerprint(normalized(RoutePath.stringValue), params)
 ```
 
 如果当前栈顶页面的 `routerRouteFingerprint` 与目标路由一致，框架会拒绝本次 push，并返回 `nil`。如果历史页面没有 fingerprint，则回退使用 `routerRouteIdentity` 判断。
@@ -415,6 +449,20 @@ routerRouteFingerprint = normalized(RoutePath.stringValue) + paramsFingerprint
 这能避免按钮连点、网络回调重复触发导致同一个页面连续入栈。
 
 由于重复 push 当前页面也包含参数指纹，同一个详情页不同业务参数可以继续进入，例如从商品 `SKU-1001` 进入商品 `SKU-1002`。
+
+参数指纹使用排序后的 key 和长度前缀 token 生成，参数值里即使包含 `&`、`=`、`,` 等分隔符字符，也不会和其他参数组合误判为同一个路由。
+
+## 线程模型
+
+公开路由 API 可以从任意线程调用，框架会把请求创建、`rootGeneration` 读取、防重入判断和最终 UIKit 操作都收敛到主线程执行。
+
+实际业务仍建议在主线程发起页面跳转，原因是：
+
+- UIKit 生命周期、当前可见栈、Modal 状态本身都是主线程语义。
+- `interceptor` 的赋值和业务登录态读取应由业务侧保证一致性。
+- 框架当前保持非 `@MainActor` API，避免对 Swift 5.7 / Objective-C 混编 / 旧 UIKit 项目造成额外调用约束。
+
+如果项目已经全面采用 Swift Concurrency，可以在业务层用 `MainActor.run` 或主线程调度发起路由。后续如果要做更强的并发约束，可以在大版本中把 Coordinator 标为 `@MainActor`。
 
 ## rootViewController 切换
 
@@ -467,6 +515,10 @@ extension UIViewController {
 - 移除 callback subject
 - 移除 owner navigation weak box
 
+对于 Modal 被外部代码直接 `dismiss` 的情况，框架额外给路由创建的目标 VC 绑定了 deinit observer。只要页面释放，即使业务没有调用 `dismissOrPop` / `pop` / `popToRoot` / `popTo`，对应 callback 也会收到 `nil` 并完成。
+
+注意：如果外部代码 dismiss 后仍强持有该 ViewController，deinit observer 不会立即触发。工业接入仍建议统一通过 Router 的退出 API 关闭页面。
+
 Demo 中 `DemoNavigationController` 已打开侧滑返回：
 
 ```swift
@@ -500,7 +552,7 @@ Demo 首页支持中文 / English 切换，所有测试场景都可以直接点�
 - Modal 路由和 Modal 内部继续 push
 - 自定义 push / pop 动画
 - 显式 pop 单页返回
-- popTo 指定页面返回
+- popTo 指定页面返回，含同 route 不同参数精确返回
 - popToRoot 多级返回
 - `push(popCurrent: true)` 后移除来源页
 - rootViewController 替换

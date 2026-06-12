@@ -6,6 +6,19 @@ import ObjectiveC
 private var routerRouteIdentityKey: UInt8 = 0
 private var routerRouteFingerprintKey: UInt8 = 0
 private var routerTransitionProviderKey: UInt8 = 0
+private var routerLifecycleObserverKey: UInt8 = 0
+
+final class RouterLifecycleObserver {
+    private let onDeinit: () -> Void
+
+    init(onDeinit: @escaping () -> Void) {
+        self.onDeinit = onDeinit
+    }
+
+    deinit {
+        onDeinit()
+    }
+}
 
 extension UIViewController {
     var routerRouteIdentity: String? {
@@ -32,6 +45,15 @@ extension UIViewController {
         }
         set {
             objc_setAssociatedObject(self, &routerRouteFingerprintKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        }
+    }
+
+    var routerLifecycleObserver: RouterLifecycleObserver? {
+        get {
+            objc_getAssociatedObject(self, &routerLifecycleObserverKey) as? RouterLifecycleObserver
+        }
+        set {
+            objc_setAssociatedObject(self, &routerLifecycleObserverKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }

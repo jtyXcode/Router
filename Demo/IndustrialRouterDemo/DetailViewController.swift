@@ -85,8 +85,13 @@ final class DetailViewController: UIViewController {
     }
 
     @objc private func duplicatePushCurrentRoute() {
+        var params: [String: Any] = ["itemId": itemId ?? "DUP"]
+        if let source {
+            params["source"] = source
+        }
+
         demoRouter?
-            .navigate(to: DemoRoute.detail, params: ["itemId": itemId ?? "DUP", "source": "duplicate"])
+            .navigate(to: DemoRoute.detail, params: params)
             .sink { result in
                 DemoLogger.log("Duplicate push blocked callback, expected nil: \(String(describing: result))")
             }

@@ -3,12 +3,24 @@ import Combine
 import IndustrialRouter
 
 final class PopToTargetLevelOneViewController: UIViewController {
+    private let scenarioId: String
+    private let targetScenarioId: String?
     private var cancellables = Set<AnyCancellable>()
     private let messageLabel = UILabel()
     private let nextButton = UIButton(type: .system)
 
+    init(scenarioId: String?, targetScenarioId: String? = nil) {
+        self.scenarioId = scenarioId ?? "target-A"
+        self.targetScenarioId = targetScenarioId
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     deinit {
-        DemoLogger.log("deinit PopToTargetLevelOneViewController")
+        DemoLogger.log("deinit PopToTargetLevelOneViewController scenarioId=\(scenarioId)")
     }
 
     override func viewDidLoad() {
@@ -55,14 +67,33 @@ final class PopToTargetLevelOneViewController: UIViewController {
     }
 
     private func applyLocalizedText() {
-        title = demoText(.popToTargetLevelOneTitle)
-        messageLabel.text = demoText(.popToTargetLevelOneMessage)
+        title = "\(demoText(.popToTargetLevelOneTitle)) \(scenarioId)"
+        messageLabel.text = "\(demoText(.popToTargetLevelOneMessage))\nscenarioId: \(scenarioId)"
         nextButton.setTitle(demoText(.popToTargetLevelOneButton), for: .normal)
     }
 
     @objc private func openLevelTwo() {
+        if scenarioId == "target-A" {
+            demoRouter?
+                .navigate(
+                    to: DemoRoute.popToTargetLevelOne,
+                    params: [
+                        "scenarioId": "target-B",
+                        "targetScenarioId": scenarioId
+                    ]
+                )
+                .sink { result in
+                    DemoLogger.log("PopTo target-B callback: \(String(describing: result))")
+                }
+                .store(in: &cancellables)
+            return
+        }
+
         demoRouter?
-            .navigate(to: DemoRoute.popToTargetLevelTwo)
+            .navigate(
+                to: DemoRoute.popToTargetLevelTwo,
+                params: ["targetScenarioId": targetScenarioId ?? "target-A"]
+            )
             .sink { result in
                 DemoLogger.log("PopTo target level two callback: \(String(describing: result))")
             }

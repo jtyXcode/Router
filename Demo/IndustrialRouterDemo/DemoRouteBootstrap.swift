@@ -43,12 +43,17 @@ enum DemoRouteBootstrap {
             PopTestViewController()
         }
 
-        RouteViewControllerRegistry.shared.register(DemoRoute.popToTargetLevelOne) { _ in
-            PopToTargetLevelOneViewController()
+        RouteViewControllerRegistry.shared.register(DemoRoute.popToTargetLevelOne) { context in
+            PopToTargetLevelOneViewController(
+                scenarioId: context.params?["scenarioId"] as? String,
+                targetScenarioId: context.params?["targetScenarioId"] as? String
+            )
         }
 
-        RouteViewControllerRegistry.shared.register(DemoRoute.popToTargetLevelTwo) { _ in
-            PopToTargetLevelTwoViewController()
+        RouteViewControllerRegistry.shared.register(DemoRoute.popToTargetLevelTwo) { context in
+            PopToTargetLevelTwoViewController(
+                targetScenarioId: context.params?["targetScenarioId"] as? String
+            )
         }
 
         RouteViewControllerRegistry.shared.register(DemoRoute.popRootLevelOne) { _ in

@@ -15,6 +15,56 @@ private struct RouteRequestStamp {
     let time: CFTimeInterval
 }
 
+private enum RouteFingerprint {
+    static func normalizedRouteKey(_ routeKey: String) -> String {
+        routeKey.lowercased()
+    }
+
+    static func routeFingerprint(routeKey: String, params: [String: Any]?) -> String {
+        [
+            field("route", normalizedRouteKey(routeKey)),
+            field("params", paramsFingerprint(params))
+        ].joined()
+    }
+
+    static func paramsFingerprint(_ params: [String: Any]?) -> String {
+        guard let params, !params.isEmpty else { return "" }
+
+        return params.keys.sorted()
+            .map { field("key", $0) + field("value", describe(params[$0])) }
+            .joined()
+    }
+
+    private static func describe(_ value: Any?) -> String {
+        guard let value else { return "nil" }
+
+        switch value {
+        case let value as Bool:
+            return "bool:\(value)"
+        case let value as String:
+            return "string:\(token(value))"
+        case let value as NSNumber:
+            return "number:\(value)"
+        case let value as URL:
+            return "url:\(token(value.absoluteString))"
+        case let value as [String: Any]:
+            return "dict:\(token(paramsFingerprint(value)))"
+        case let value as [Any]:
+            return "array:\(value.map { token(describe($0)) }.joined())"
+        default:
+            return "custom:\(token(String(describing: Swift.type(of: value)))):\(token(String(describing: value)))"
+        }
+    }
+
+    private static func field(_ name: String, _ value: String) -> String {
+        "\(name):\(token(value))"
+    }
+
+    private static func token(_ value: String) -> String {
+        "\(value.utf8.count):\(value)"
+    }
+}
+
 private extension RouterNavigationType {
     var reentryKey: String {
         switch self {
@@ -79,9 +129,9 @@ public final class IndustrialRouterCoordinator: NSObject {
             self.responseSubject = responseSubject
             self.redirectDepth = redirectDepth
             self.rootGeneration = rootGeneration
-            self.normalizedRouteKey = Self.normalizeRouteKey(path.stringValue)
-            self.paramsFingerprint = Self.makeParamsFingerprint(params)
-            self.routeFingerprint = "\(normalizedRouteKey)|\(paramsFingerprint)"
+            self.normalizedRouteKey = RouteFingerprint.normalizedRouteKey(path.stringValue)
+            self.paramsFingerprint = RouteFingerprint.paramsFingerprint(params)
+            self.routeFingerprint = RouteFingerprint.routeFingerprint(routeKey: path.stringValue, params: params)
             self.reentrySignature = RouteRequestSignature(
                 routeKey: normalizedRouteKey,
                 paramsFingerprint: paramsFingerprint,
@@ -99,39 +149,6 @@ public final class IndustrialRouterCoordinator: NSObject {
                 redirectDepth: redirectDepth + 1,
                 rootGeneration: rootGeneration
             )
-        }
-
-        private static func normalizeRouteKey(_ routeKey: String) -> String {
-            routeKey.lowercased()
-        }
-
-        private static func makeParamsFingerprint(_ params: [String: Any]?) -> String {
-            guard let params, !params.isEmpty else { return "" }
-
-            return params.keys.sorted()
-                .map { "\($0)=\(describe(params[$0]))" }
-                .joined(separator: "&")
-        }
-
-        private static func describe(_ value: Any?) -> String {
-            guard let value else { return "nil" }
-
-            switch value {
-            case let value as Bool:
-                return "bool:\(value)"
-            case let value as String:
-                return "string:\(value)"
-            case let value as NSNumber:
-                return "number:\(value)"
-            case let value as URL:
-                return "url:\(value.absoluteString)"
-            case let value as [String: Any]:
-                return "dict:{\(makeParamsFingerprint(value))}"
-            case let value as [Any]:
-                return "array:[\(value.map { describe($0) }.joined(separator: ","))]"
-            default:
-                return "\(Swift.type(of: value)):\(String(describing: value))"
-            }
         }
     }
 
@@ -175,16 +192,36 @@ public final class IndustrialRouterCoordinator: NSObject {
         transitionProvider: RouteTransitionProvider? = nil
     ) -> AnyPublisher<Any?, Never> {
         let responseSubject = PassthroughSubject<Any?, Never>()
-        let request = RouteRequest(
-            path: path,
-            type: type,
-            params: params,
-            transitionProvider: transitionProvider,
-            responseSubject: responseSubject,
-            rootGeneration: rootGeneration
-        )
 
-        send(request)
+        let createAndSubmitRequest = { [weak self] in
+            guard let self else {
+                responseSubject.send(nil)
+                responseSubject.send(completion: .finished)
+                return
+            }
+
+            let request = RouteRequest(
+                path: path,
+                type: type,
+                params: params,
+                transitionProvider: transitionProvider,
+                responseSubject: responseSubject,
+                rootGeneration: self.rootGeneration
+            )
+
+            DispatchQueue.main.async { [weak self] in
+                self?.handleIncomingRouteRequest(request)
+            }
+        }
+
+        if Thread.isMainThread {
+            createAndSubmitRequest()
+        } else {
+            DispatchQueue.main.async {
+                createAndSubmitRequest()
+            }
+        }
+
         return responseSubject.eraseToAnyPublisher()
     }
 
@@ -222,9 +259,14 @@ public final class IndustrialRouterCoordinator: NSObject {
     }
 
     /// Pops the active navigation stack back to the latest page matching the route path.
-    public func popTo(path: any RoutePath, result: Any? = nil, animated: Bool = true) {
+    public func popTo(
+        path: any RoutePath,
+        params: [String: Any]? = nil,
+        result: Any? = nil,
+        animated: Bool = true
+    ) {
         DispatchQueue.main.async { [weak self] in
-            self?.performPopTo(routeKey: path.stringValue, result: result, animated: animated)
+            self?.performPopTo(routeKey: path.stringValue, params: params, result: result, animated: animated)
         }
     }
 
@@ -242,12 +284,6 @@ public final class IndustrialRouterCoordinator: NSObject {
                 self?.executeRoute(request)
             }
             .store(in: &cancellables)
-    }
-
-    private func send(_ request: RouteRequest) {
-        DispatchQueue.main.async { [weak self] in
-            self?.handleIncomingRouteRequest(request)
-        }
     }
 
     private func handleIncomingRouteRequest(_ request: RouteRequest) {
@@ -274,17 +310,21 @@ public final class IndustrialRouterCoordinator: NSObject {
             rootNavigationController?.delegate = nil
         }
 
-        cancelPendingRoutesOnMain(result: nil)
+        cancelPendingRoutesOnMain(result: nil, invalidateGeneration: false)
         navigationController.delegate = self
         rootNavigationController = navigationController
         rootGeneration += 1
         lastAcceptedRoute = nil
     }
 
-    private func cancelPendingRoutesOnMain(result: Any?) {
+    private func cancelPendingRoutesOnMain(result: Any?, invalidateGeneration: Bool = true) {
         interceptionCancellables.removeAll()
         pendingPushTransitionProvider = nil
         pendingModalTransitionProvider = nil
+        if invalidateGeneration {
+            rootGeneration += 1
+            lastAcceptedRoute = nil
+        }
         finishAllPendingCallbacks(result: result)
     }
 }
@@ -329,6 +369,11 @@ private extension IndustrialRouterCoordinator {
     }
 
     func handleInterceptResult(_ result: RouteInterceptResult, for request: RouteRequest) {
+        guard request.rootGeneration == rootGeneration else {
+            finish(request.responseSubject, result: nil)
+            return
+        }
+
         switch result {
         case .allowed:
             performNavigation(request)
@@ -349,6 +394,11 @@ private extension IndustrialRouterCoordinator {
     }
 
     func performNavigation(_ request: RouteRequest) {
+        guard request.rootGeneration == rootGeneration else {
+            finish(request.responseSubject, result: nil)
+            return
+        }
+
         guard let activeNavigationController else {
             finish(request.responseSubject, result: nil)
             return
@@ -364,6 +414,7 @@ private extension IndustrialRouterCoordinator {
         targetViewController.routerRouteFingerprint = request.routeFingerprint
         targetViewController.routerTransitionProvider = request.transitionProvider
         completionSubjects[ObjectIdentifier(targetViewController)] = request.responseSubject
+        bindLifecycleCleanup(to: targetViewController)
 
         switch request.type {
         case .push(let popCurrent, let animated):
@@ -503,7 +554,11 @@ private extension IndustrialRouterCoordinator {
             return
         }
 
-        guard let topViewController = rootNavigationController.topViewController else { return }
+        guard rootNavigationController.viewControllers.count > 1,
+              let topViewController = rootNavigationController.topViewController else {
+            return
+        }
+
         finish(topViewController, result: result)
         rootNavigationController.popViewController(animated: animated)
     }
@@ -519,12 +574,23 @@ private extension IndustrialRouterCoordinator {
         navigationController.popViewController(animated: animated)
     }
 
-    func performPopTo(routeKey: String, result: Any?, animated: Bool) {
+    func performPopTo(routeKey: String, params: [String: Any]?, result: Any?, animated: Bool) {
         guard let navigationController = activeNavigationController else { return }
 
-        let normalizedRouteKey = routeKey.lowercased()
-        guard let targetIndex = navigationController.viewControllers.lastIndex(where: {
-            $0.routerRouteIdentity?.lowercased() == normalizedRouteKey
+        let normalizedRouteKey = RouteFingerprint.normalizedRouteKey(routeKey)
+        let targetFingerprint: String?
+        if let params {
+            targetFingerprint = RouteFingerprint.routeFingerprint(routeKey: routeKey, params: params)
+        } else {
+            targetFingerprint = nil
+        }
+
+        guard let targetIndex = navigationController.viewControllers.lastIndex(where: { viewController in
+            if let targetFingerprint {
+                return viewController.routerRouteFingerprint == targetFingerprint
+            }
+
+            return viewController.routerRouteIdentity?.lowercased() == normalizedRouteKey
         }) else {
             return
         }
@@ -572,19 +638,28 @@ private extension IndustrialRouterCoordinator {
         }
 
         for id in idsToFinish {
-            completionSubjects[id]?.send(nil)
-            completionSubjects[id]?.send(completion: .finished)
-            completionSubjects.removeValue(forKey: id)
-            ownerNavigationControllers.removeValue(forKey: id)
+            finish(id, result: nil)
+        }
+    }
+
+    func bindLifecycleCleanup(to viewController: UIViewController) {
+        let id = ObjectIdentifier(viewController)
+        viewController.routerLifecycleObserver = RouterLifecycleObserver { [weak self] in
+            DispatchQueue.main.async { [weak self] in
+                self?.finish(id, result: nil)
+            }
         }
     }
 
     func finish(_ viewController: UIViewController, result: Any?) {
-        let id = ObjectIdentifier(viewController)
-        completionSubjects[id]?.send(result)
-        completionSubjects[id]?.send(completion: .finished)
-        completionSubjects.removeValue(forKey: id)
+        finish(ObjectIdentifier(viewController), result: result)
+    }
+
+    func finish(_ id: ObjectIdentifier, result: Any?) {
+        let subject = completionSubjects.removeValue(forKey: id)
         ownerNavigationControllers.removeValue(forKey: id)
+        subject?.send(result)
+        subject?.send(completion: .finished)
     }
 
     func finish(_ subject: PassthroughSubject<Any?, Never>, result: Any?) {

@@ -30,9 +30,16 @@ source_files = Dir[File.join(ROOT, "Sources", "IndustrialRouter", "*.swift")]
   .sort
   .map { |path| path.delete_prefix("#{ROOT}/") }
 
+resource_files = Dir[File.join(ROOT, "Sources", "IndustrialRouter", "Resources", "**", "*")]
+  .select { |path| File.file?(path) }
+  .sort
+  .map { |path| path.delete_prefix("#{ROOT}/") }
+
 demo_files = Dir[File.join(ROOT, "Demo", "IndustrialRouterDemo", "*.swift")]
   .sort
   .map { |path| path.delete_prefix("#{ROOT}/") }
+
+demo_development_team = ENV.fetch("DEVELOPMENT_TEAM", "6E9ARQD7Y3").strip
 
 ids = {
   project: uuid("project"),
@@ -40,10 +47,12 @@ ids = {
   sources_group: uuid("sources_group"),
   demo_group: uuid("demo_group"),
   products_group: uuid("products_group"),
+  framework_resources_group: uuid("framework_resources_group"),
   framework_target: uuid("framework_target"),
   demo_target: uuid("demo_target"),
   framework_sources_phase: uuid("framework_sources_phase"),
   framework_frameworks_phase: uuid("framework_frameworks_phase"),
+  framework_resources_phase: uuid("framework_resources_phase"),
   demo_sources_phase: uuid("demo_sources_phase"),
   demo_frameworks_phase: uuid("demo_frameworks_phase"),
   demo_embed_phase: uuid("demo_embed_phase"),
@@ -66,6 +75,8 @@ objects = []
 
 framework_file_refs = source_files.to_h { |path| [path, uuid("file_ref:#{path}")] }
 framework_build_files = source_files.to_h { |path| [path, uuid("build_file:#{path}")] }
+framework_resource_refs = resource_files.to_h { |path| [path, uuid("resource_ref:#{path}")] }
+framework_resource_build_files = resource_files.to_h { |path| [path, uuid("resource_build_file:#{path}")] }
 demo_file_refs = demo_files.to_h { |path| [path, uuid("file_ref:#{path}")] }
 demo_build_files = demo_files.to_h { |path| [path, uuid("build_file:#{path}")] }
 framework_link_build_file = uuid("framework_link_build_file")
@@ -74,6 +85,11 @@ framework_embed_build_file = uuid("framework_embed_build_file")
 source_files.each do |path|
   objects << "#{framework_file_refs[path]} = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = #{quote(File.basename(path))}; sourceTree = \"<group>\"; };"
   objects << "#{framework_build_files[path]} = {isa = PBXBuildFile; fileRef = #{framework_file_refs[path]}; };"
+end
+
+resource_files.each do |path|
+  objects << "#{framework_resource_refs[path]} = {isa = PBXFileReference; lastKnownFileType = text.xml; path = #{quote(File.basename(path))}; sourceTree = \"<group>\"; };"
+  objects << "#{framework_resource_build_files[path]} = {isa = PBXBuildFile; fileRef = #{framework_resource_refs[path]}; };"
 end
 
 demo_files.each do |path|
@@ -86,7 +102,13 @@ objects << "#{ids[:demo_product]} = {isa = PBXFileReference; explicitFileType = 
 objects << "#{framework_link_build_file} = {isa = PBXBuildFile; fileRef = #{ids[:framework_product]}; };"
 objects << "#{framework_embed_build_file} = {isa = PBXBuildFile; fileRef = #{ids[:framework_product]}; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };"
 
-objects << "#{ids[:sources_group]} = {isa = PBXGroup; children = #{list(framework_file_refs.values, 3)}; path = Sources/IndustrialRouter; sourceTree = \"<group>\"; };"
+source_group_children = framework_file_refs.values
+if resource_files.any?
+  objects << "#{ids[:framework_resources_group]} = {isa = PBXGroup; children = #{list(framework_resource_refs.values, 3)}; path = Resources; sourceTree = \"<group>\"; };"
+  source_group_children += [ids[:framework_resources_group]]
+end
+
+objects << "#{ids[:sources_group]} = {isa = PBXGroup; children = #{list(source_group_children, 3)}; path = Sources/IndustrialRouter; sourceTree = \"<group>\"; };"
 objects << "#{ids[:demo_group]} = {isa = PBXGroup; children = #{list(demo_file_refs.values + [uuid("demo_info_plist_ref")], 3)}; path = Demo/IndustrialRouterDemo; sourceTree = \"<group>\"; };"
 objects << "#{uuid("demo_info_plist_ref")} = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };"
 objects << "#{ids[:products_group]} = {isa = PBXGroup; children = #{list([ids[:framework_product], ids[:demo_product]], 3)}; name = Products; sourceTree = \"<group>\"; };"
@@ -94,6 +116,7 @@ objects << "#{ids[:main_group]} = {isa = PBXGroup; children = #{list([ids[:sourc
 
 objects << "#{ids[:framework_sources_phase]} = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = #{list(framework_build_files.values, 3)}; runOnlyForDeploymentPostprocessing = 0; };"
 objects << "#{ids[:framework_frameworks_phase]} = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };"
+objects << "#{ids[:framework_resources_phase]} = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = #{list(framework_resource_build_files.values, 3)}; runOnlyForDeploymentPostprocessing = 0; };"
 objects << "#{ids[:demo_sources_phase]} = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = #{list(demo_build_files.values, 3)}; runOnlyForDeploymentPostprocessing = 0; };"
 objects << "#{ids[:demo_frameworks_phase]} = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (#{framework_link_build_file}, ); runOnlyForDeploymentPostprocessing = 0; };"
 objects << "#{ids[:demo_embed_phase]} = {isa = PBXCopyFilesBuildPhase; buildActionMask = 2147483647; dstPath = \"\"; dstSubfolderSpec = 10; files = (#{framework_embed_build_file}, ); name = \"Embed Frameworks\"; runOnlyForDeploymentPostprocessing = 0; };"
@@ -101,7 +124,7 @@ objects << "#{ids[:demo_embed_phase]} = {isa = PBXCopyFilesBuildPhase; buildActi
 objects << "#{ids[:framework_proxy]} = {isa = PBXContainerItemProxy; containerPortal = #{ids[:project]}; proxyType = 1; remoteGlobalIDString = #{ids[:framework_target]}; remoteInfo = IndustrialRouter; };"
 objects << "#{ids[:framework_dependency]} = {isa = PBXTargetDependency; target = #{ids[:framework_target]}; targetProxy = #{ids[:framework_proxy]}; };"
 
-objects << "#{ids[:framework_target]} = {isa = PBXNativeTarget; buildConfigurationList = #{ids[:framework_config_list]}; buildPhases = (#{ids[:framework_sources_phase]}, #{ids[:framework_frameworks_phase]}, ); buildRules = (); dependencies = (); name = IndustrialRouter; productName = IndustrialRouter; productReference = #{ids[:framework_product]}; productType = \"com.apple.product-type.framework\"; };"
+objects << "#{ids[:framework_target]} = {isa = PBXNativeTarget; buildConfigurationList = #{ids[:framework_config_list]}; buildPhases = (#{ids[:framework_sources_phase]}, #{ids[:framework_frameworks_phase]}, #{ids[:framework_resources_phase]}, ); buildRules = (); dependencies = (); name = IndustrialRouter; productName = IndustrialRouter; productReference = #{ids[:framework_product]}; productType = \"com.apple.product-type.framework\"; };"
 objects << "#{ids[:demo_target]} = {isa = PBXNativeTarget; buildConfigurationList = #{ids[:demo_config_list]}; buildPhases = (#{ids[:demo_sources_phase]}, #{ids[:demo_frameworks_phase]}, #{ids[:demo_embed_phase]}, ); buildRules = (); dependencies = (#{ids[:framework_dependency]}, ); name = IndustrialRouterDemo; productName = IndustrialRouterDemo; productReference = #{ids[:demo_product]}; productType = \"com.apple.product-type.application\"; };"
 
 project_settings = {
@@ -181,6 +204,7 @@ end
   }],
   [:demo_debug, "Debug", {
     "CODE_SIGN_STYLE" => "Automatic",
+    "DEVELOPMENT_TEAM" => demo_development_team,
     "INFOPLIST_FILE" => "Demo/IndustrialRouterDemo/Info.plist",
     "IPHONEOS_DEPLOYMENT_TARGET" => "13.0",
     "LD_RUNPATH_SEARCH_PATHS" => "$(inherited) @executable_path/Frameworks",
@@ -191,6 +215,7 @@ end
   }],
   [:demo_release, "Release", {
     "CODE_SIGN_STYLE" => "Automatic",
+    "DEVELOPMENT_TEAM" => demo_development_team,
     "INFOPLIST_FILE" => "Demo/IndustrialRouterDemo/Info.plist",
     "IPHONEOS_DEPLOYMENT_TARGET" => "13.0",
     "LD_RUNPATH_SEARCH_PATHS" => "$(inherited) @executable_path/Frameworks",

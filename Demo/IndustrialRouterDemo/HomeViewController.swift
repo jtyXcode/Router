@@ -222,7 +222,10 @@ final class HomeViewController: UIViewController {
 
     @objc private func openPopToTargetScenario() {
         demoRouter?
-            .navigate(to: DemoRoute.popToTargetLevelOne)
+            .navigate(
+                to: DemoRoute.popToTargetLevelOne,
+                params: ["scenarioId": "target-A"]
+            )
             .sink { result in
                 DemoLogger.log("PopTo target level one callback: \(String(describing: result))")
             }
